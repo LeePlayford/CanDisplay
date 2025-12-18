@@ -1,0 +1,42 @@
+#ifndef CANUSB_H
+#define CANUSB_H
+
+typedef enum {
+    CANUSB_SPEED_1000000 = 0x01,
+    CANUSB_SPEED_800000  = 0x02,
+    CANUSB_SPEED_500000  = 0x03,
+    CANUSB_SPEED_400000  = 0x04,
+    CANUSB_SPEED_250000  = 0x05,
+    CANUSB_SPEED_200000  = 0x06,
+    CANUSB_SPEED_125000  = 0x07,
+    CANUSB_SPEED_100000  = 0x08,
+    CANUSB_SPEED_50000   = 0x09,
+    CANUSB_SPEED_20000   = 0x0a,
+    CANUSB_SPEED_10000   = 0x0b,
+    CANUSB_SPEED_5000    = 0x0c,
+} CANUSB_SPEED;
+
+typedef enum {
+    CANUSB_MODE_NORMAL          = 0x00,
+    CANUSB_MODE_LOOPBACK        = 0x01,
+    CANUSB_MODE_SILENT          = 0x02,
+    CANUSB_MODE_LOOPBACK_SILENT = 0x03,
+} CANUSB_MODE;
+
+typedef enum {
+    CANUSB_FRAME_STANDARD = 0x01,
+    CANUSB_FRAME_EXTENDED = 0x02,
+} CANUSB_FRAME;
+
+typedef enum {
+    CANUSB_INJECT_PAYLOAD_MODE_RANDOM      = 0,
+    CANUSB_INJECT_PAYLOAD_MODE_INCREMENTAL = 1,
+    CANUSB_INJECT_PAYLOAD_MODE_FIXED       = 2,
+} CANUSB_PAYLOAD_MODE;
+
+
+
+int adapter_init(const char *tty_device, int baudrate);
+int command_settings(int tty_fd, CANUSB_SPEED speed, CANUSB_MODE mode, CANUSB_FRAME frame);
+
+#endif // CANUSB_H

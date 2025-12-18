@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,8 +22,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QTimer * m_timer;
 
 public slots:
     void buttonpushed ();
+    void timerexpired ();
 };
 #endif // MAINWINDOW_H
