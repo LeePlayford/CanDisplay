@@ -31,6 +31,7 @@ void WindData(const tN2kMsg &N2kMsg);
 void BoatSpeed(const tN2kMsg &N2kMsg);
 void GPSPosition(const tN2kMsg &N2kMsg);
 void GPSCogSog(const tN2kMsg &N2kMsg);
+void Baro(const tN2kMsg &N2kMsg);
 
 
 typedef struct {
@@ -45,6 +46,7 @@ tNMEA2000Handler NMEA2000Handlers[]={
     {128259L,&BoatSpeed},
     {129029L,&GPSPosition},
     {129026L,&GPSCogSog},
+    {130314L,&Baro},
     {0,0}
 };
 
@@ -86,16 +88,6 @@ MainWindow::MainWindow(QWidget *parent)
     if (NMEA2000.Open())
     {
         NMEA2000.SendProductInformation(0x0);
-        //ESP_LOGI(NMEA , "NMEA2000 Opened");
-
-
-        /*tN2kMsg N2kMsg;
-        SetN2kSystemTime(N2kMsg,1,17555,62000);
-        if (NMEA2000.SendMsg(N2kMsg)) {
-            ESP_LOGI(NMEA , "N2kSystemTime Sent");
-        } else {
-            ESP_LOGE(NMEA , "N2kSystemTime Send Failed");
-        }*/
     }
 
     m_timer = new QTimer(this);
@@ -104,11 +96,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect (m_timer , &QTimer::timeout , this , &MainWindow::timerexpired);
 
     s_pDisplayInstance = new Display (ui);
-
-    //ui->textEdit->setText(qVersion());
-
-    //connect (ui->pushButton , &QPushButton::clicked , this , &MainWindow::buttonpushed);
-
 }
 
 //------------------------------------------------------------
@@ -156,6 +143,22 @@ void HandleNMEA2000Msg(const tN2kMsg &N2kMsg)
     }
 }
 
+
+//-------------------------------------
+//
+//-------------------------------------
+void Baro(const tN2kMsg &N2kMsg) {
+    unsigned char SID;
+    unsigned char PressureInstance;
+    tN2kPressureSource source;
+    double Baro;
+
+    if (ParseN2kPGN130314(N2kMsg,SID,PressureInstance, source, Baro) )
+    {
+        s_pDisplayInstance->UpdateDisplay(DataItem::BARO , Baro);
+    }
+
+}
 
 //-------------------------------------
 //
@@ -210,8 +213,8 @@ void GPSPosition(const tN2kMsg &N2kMsg) {
     {
         //ESP_LOGI(NMEA , "GPS Position: Lat %.6f, Lon %.6f", Latitude, Longitude);
 
-        //UpdateDisplay (DataItem::LAT , (Latitude));
-        //UpdateDisplay (DataItem::LON , (Longitude));
+        s_pDisplayInstance->UpdateDisplay (DataItem::LAT , (Latitude));
+        s_pDisplayInstance->UpdateDisplay (DataItem::LON , (Longitude));
 
 
     }
@@ -239,7 +242,7 @@ void BoatSpeed(const tN2kMsg &N2kMsg)
 
     if (ParseN2kPGN128259 (N2kMsg, SID, BoatSpeed , GroundReferenced, SWRT))
     {
-        //UpdateDisplay (DataItem::BSP , msToKnots(BoatSpeed));
+        s_pDisplayInstance->UpdateDisplay (DataItem::BSP , msToKnots(BoatSpeed));
     }
 }
 
@@ -255,8 +258,8 @@ void GPSCogSog(const tN2kMsg &N2kMsg)
 
     if (ParseN2kPGN129026 (N2kMsg, SID, ref , COG , SOG))
     {
-        //UpdateDisplay (DataItem::SOG , msToKnots(SOG));
-        //UpdateDisplay (DataItem::COG , RadToDeg(COG));
+        s_pDisplayInstance->UpdateDisplay (DataItem::SOG , msToKnots(SOG));
+        s_pDisplayInstance->UpdateDisplay (DataItem::COG , RadToDeg(COG));
     }
 }
 
@@ -276,7 +279,7 @@ void WindData(const tN2kMsg &N2kMsg)
         switch (WindReference)
         {
         case N2kWind_True_North:
-            //UpdateDisplay (DataItem::TWD , RadToDeg(WindAngle));
+            s_pDisplayInstance->UpdateDisplay (DataItem::TWD , RadToDeg(WindAngle));
             break;
         case N2kWind_Magnetic:
             //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (Magnetic)", WindSpeed, WindAngle);
@@ -285,24 +288,24 @@ void WindData(const tN2kMsg &N2kMsg)
         {
             //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (Apparent)", WindSpeed, WindAngle);
 
-            //UpdateDisplay (DataItem::AWS , msToKnots(WindSpeed));
+            s_pDisplayInstance->UpdateDisplay (DataItem::AWS , msToKnots(WindSpeed));
             double AWA = RadToDeg(WindAngle);
             if (AWA > 180.0)
             {
                 AWA -= 360.0; // Normalize to -180 to 180 degrees
             }
-            //UpdateDisplay (DataItem::AWA , AWA);
+            s_pDisplayInstance->UpdateDisplay (DataItem::AWA , AWA);
             break;
         }
         case N2kWind_True_boat:
         {
-            //UpdateDisplay (DataItem::TWS , msToKnots(WindSpeed));
+            s_pDisplayInstance->UpdateDisplay (DataItem::TWS , msToKnots(WindSpeed));
             double TWA = RadToDeg(WindAngle);
             if (TWA > 180.0)
             {
                 TWA -= 360.0; // Normalize to -180 to 180 degrees
             }
-            //UpdateDisplay (DataItem::TWA , TWA);
+            s_pDisplayInstance->UpdateDisplay (DataItem::TWA , TWA);
             break;
         }
 

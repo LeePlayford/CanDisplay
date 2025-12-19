@@ -26,8 +26,7 @@ SOURCES += \
     NMEA2000_socketCAN/NMEA2000_SocketCAN.cpp \
     display.cpp \
     main.cpp \
-    mainwindow.cpp \
-    page_6_fields.cpp
+    mainwindow.cpp
 
 HEADERS += \
     CanAdaptor/canusb.h \
@@ -50,13 +49,10 @@ HEADERS += \
     NMEA2000/RingBuffer.tpp \
     NMEA2000_socketCAN/NMEA2000_SocketCAN.h \
     display.h \
-    mainwindow.h \
-    page_6_fields.h
+    mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    page_6_fields.ui \
-    sixpage.ui
+    mainwindow.ui
 
 TRANSLATIONS += \
     CanDisplay_en_GB.ts

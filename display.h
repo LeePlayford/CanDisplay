@@ -19,7 +19,8 @@ enum class DataItem {
     COG,
     DATA_ITEM_WIND_SPEED,
     DATA_ITEM_DEPTH,
-    DATA_ITEM_FLUID_LEVEL
+    DATA_ITEM_FLUID_LEVEL,
+    BARO
 };
 
 class Display : public QObject

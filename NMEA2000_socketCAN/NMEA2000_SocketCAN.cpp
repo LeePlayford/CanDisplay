@@ -154,11 +154,12 @@ bool tNMEA2000_SocketCAN::CANSendFrame(unsigned long id, unsigned char len, cons
              // socketCAN works to keeping all packets in-order, so
              // no need to do anything special for wait-sent
 }
-
-
+#if defined (__x86_64__)
 //*****************************************************************************
 bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, unsigned char *buf) {
-    struct can_frame frame_rd;
+    //struct can_frame frame_rd;
+    const int can_frame_size = 14;
+    uchar frame_rd [14];
     struct timeval tv = {0, 0};                                                 // Non-blocking timout when checking
     fd_set fds;
 
@@ -173,18 +174,38 @@ bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, uns
         uchar chr;
         while (read (skt , &chr , 1))
         {
-            char temp[10];
-            sprintf (temp , "%02X " , chr);
-            qDebug() << temp;
             if (chr == 0xAA)
             {
-                read (skt , &chr , 1);
                 break;
             }
         }
 
-        if (read(skt, &frame_rd, sizeof(frame_rd)) > 0)
+        if (read(skt, &frame_rd, can_frame_size /*sizeof(frame_rd)*/) > 0)
         {
+            memcpy(buf, &frame_rd[5] , 8);
+            len = 8; //frame_rd.can_dlc;
+            id = (frame_rd[4]&0xff) << 24 | (frame_rd[3]&0xff) << 16 |(frame_rd[2]&0xff) << 8 | (frame_rd[1]&0xff);
+            return true;
+        }
+    }
+    return false;
+
+}
+#else
+//*****************************************************************************
+bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, unsigned char *buf) {
+    struct can_frame frame_rd;
+    struct timeval tv = {0, 0};                                                 // Non-blocking timout when checking
+    fd_set fds;
+
+    FD_ZERO(&fds);
+    FD_SET(skt, &fds);
+
+    if (select((skt + 1), &fds, NULL, NULL, &tv) < 0)                           // Is there a FD with something to read out there?
+        return false;
+
+    if (FD_ISSET(skt, &fds)) {                                                  // Was it our CAN file-descriptor that is ready?
+        if (read(skt, &frame_rd, sizeof(frame_rd)) > 0) {
             memcpy(buf, frame_rd.data, 8);
             len = frame_rd.can_dlc;
             id  = frame_rd.can_id;
@@ -194,6 +215,8 @@ bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, uns
     return false;
 
 }
+
+#endif
 
 
 //*****************************************************************************

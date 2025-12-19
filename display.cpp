@@ -38,13 +38,13 @@ void Display::UpdateDisplay (DataItem dataItem, float value)
         }
         // Update the AWA label with the absolute value
         sprintf(buf, "%.f", std::abs(value));
-        //lv_label_set_text(ui_AWAData, buf);
+        m_pUi->lineEdit_Data_Wind_AWA->setText(buf);
         //SetWindValue (value);
         break;
 
     case DataItem::TWS:
         sprintf(buf, "%.1f", std::abs(value));
-        //lv_label_set_text(ui_TWSData, buf);
+        m_pUi->lineEdit_Data_Wind_TWS->setText(buf);
         break;
 
     case DataItem::TWA:
@@ -60,42 +60,47 @@ void Display::UpdateDisplay (DataItem dataItem, float value)
         }
         // Update the AWA label with the absolute value
         sprintf(buf, "%.f", std::abs(value));
-        //lv_label_set_text(ui_TWAData, buf);
+        m_pUi->lineEdit_Data_Wind_TWA->setText(buf);
         break;
 
     case DataItem::TWD:
         sprintf(buf, "%.f°", value);
-        //lv_label_set_text(ui_TWDData, buf);
+        m_pUi->lineEdit_Data_Wind_TWD->setText(buf);
         break;
 
     case DataItem::BSP:
         sprintf(buf, "%.1f", value);
-        //lv_label_set_text(ui_BSPData, buf);
+        m_pUi->lineEdit_Data_Wind_BSP->setText(buf);
         break;
 
     case DataItem::LAT:
         ConvertToDMS(value, buf, sizeof(buf), true);
-        //lv_label_set_text(ui_LatitudeData, buf);
+        m_pUi->lineEdit_Data_Position_Latitude->setText (buf);
         break;
 
     case DataItem::LON:
         ConvertToDMS(value, buf, sizeof(buf), false);
-        //lv_label_set_text(ui_LongitudeData, buf);
+        m_pUi->lineEdit_Data_Position_Longitude->setText (buf);
         break;
 
     case DataItem::COG:
         sprintf(buf, "%.f°", value);
-        //lv_label_set_text(ui_COGData, buf);
+        m_pUi->lineEdit_Data_Position_COG->setText (buf);
         break;
 
     case DataItem::SOG:
         sprintf(buf, "%.01f", value);
-        //lv_label_set_text(ui_SOGData, buf);
+        m_pUi->lineEdit_Data_Position_SOG->setText (buf);
         break;
 
     case DataItem::DATA_ITEM_DEPTH:
         sprintf(buf, "%.01f", value);
         m_pUi->lineEdit_Data_Boat_Depth->setText(buf);
+        break;
+
+    case DataItem::BARO:
+        sprintf(buf, "%.f", value / 100.0f);
+        m_pUi->lineEdit_Data_Env_Baro->setText(buf);
         break;
 
     default:

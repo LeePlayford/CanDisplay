@@ -50,7 +50,7 @@ QTabWidget::tab-bar {
      <enum>QTabWidget::North</enum>
     </property>
     <property name="tabShape">
-     <enum>QTabWidget::Triangular</enum>
+     <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -83,7 +83,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>AWA</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_TWS_2">
+         <widget class="QLineEdit" name="lineEdit_Data_Wind_AWA">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -106,7 +106,7 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>T W S</string>
+           <string>A W A</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -155,13 +155,13 @@ QTabWidget::tab-bar {
           </property>
           <property name="font">
            <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
+            <family>Noto Sans Gujarati</family>
+            <pointsize>64</pointsize>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>T W S</string>
+           <string>T W S 0.0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -372,7 +372,7 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>T W A</string>
+           <string>T W A 0.0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -744,14 +744,632 @@ QTabWidget::tab-bar {
      <attribute name="title">
       <string>Position</string>
      </attribute>
+     <widget class="QWidget" name="gridLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>981</width>
+        <height>461</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="groupBox_14">
+         <property name="title">
+          <string>Course Over Ground</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Data_Position_COG">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>C O G</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_16">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Degrees</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBox_16">
+         <property name="title">
+          <string>Speed Over Ground</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Data_Position_SOG">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>461</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>S O G</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_23">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Kts</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QGroupBox" name="groupBox_17">
+         <property name="title">
+          <string>Boat Water Speed </string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_24">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>B S P</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_25">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="groupBox_18">
+         <property name="title">
+          <string>TWD</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_26">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>30</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>T W D</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_27">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox_15">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="title">
+          <string>Position</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Data_Position_Latitude">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>20</y>
+            <width>951</width>
+            <height>61</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>LATITUDE</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Data_Position_Longitude">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>80</y>
+            <width>951</width>
+            <height>61</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>LONGITUDE</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_Environment">
      <attribute name="title">
       <string>Environment</string>
      </attribute>
+     <widget class="QWidget" name="gridLayoutWidget_4">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>40</y>
+        <width>981</width>
+        <height>461</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="groupBox_19">
+         <property name="title">
+          <string>AWA</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_28">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>T W S</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_29">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBox_20">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="title">
+          <string>Baro</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Data_Env_Baro">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>B A R O</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_TWS_4">
+          <property name="geometry">
+           <rect>
+            <x>342</x>
+            <y>10</y>
+            <width>131</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string>millibars</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBox_21">
+         <property name="title">
+          <string>AWS</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_30">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>461</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>A W S</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_31">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QGroupBox" name="groupBox_22">
+         <property name="title">
+          <string>Boat Water Speed </string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_32">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>B S P</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_33">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="groupBox_23">
+         <property name="title">
+          <string>TWD</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_34">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>30</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>T W D</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_35">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="groupBox_24">
+         <property name="title">
+          <string>TWA</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Data_TWA_3">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>461</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>T W A</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_TWA_3">
+          <property name="geometry">
+           <rect>
+            <x>370</x>
+            <y>10</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Unit Label 2</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
