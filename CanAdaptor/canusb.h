@@ -38,5 +38,7 @@ typedef enum {
 
 int adapter_init(const char *tty_device, int baudrate);
 int command_settings(int tty_fd, CANUSB_SPEED speed, CANUSB_MODE mode, CANUSB_FRAME frame);
+int frame_send(int tty_fd, const unsigned char *frame, int frame_len);
+int send_data_frame(int tty_fd, CANUSB_FRAME frame, unsigned long id, const unsigned char data[], int data_length_code);
 
 #endif // CANUSB_H

@@ -6,9 +6,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QApplication a(argc, argv);
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

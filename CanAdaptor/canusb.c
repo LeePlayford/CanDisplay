@@ -105,7 +105,7 @@ static int frame_is_complete(const unsigned char *frame, int frame_len)
 
 
 
-static int frame_send(int tty_fd, const unsigned char *frame, int frame_len)
+int frame_send(int tty_fd, const unsigned char *frame, int frame_len)
 {
   int result, i;
 
@@ -224,9 +224,10 @@ int command_settings(int tty_fd, CANUSB_SPEED speed, CANUSB_MODE mode, CANUSB_FR
 
 
 
-static int send_data_frame(int tty_fd, CANUSB_FRAME frame, unsigned char id_lsb, unsigned char id_msb, unsigned char data[], int data_length_code)
+//static int send_data_frame(int tty_fd, CANUSB_FRAME frame, unsigned char id_lsb, unsigned char id_msb, unsigned char data[], int data_length_code)
+int send_data_frame(int tty_fd, CANUSB_FRAME frame, unsigned long id, const unsigned char data[], int data_length_code)
 {
-#define MAX_FRAME_SIZE 13
+#define MAX_FRAME_SIZE 16
   int data_frame_len = 0;
   unsigned char data_frame[MAX_FRAME_SIZE] = {0x00};
 
@@ -251,8 +252,10 @@ static int send_data_frame(int tty_fd, CANUSB_FRAME frame, unsigned char id_lsb,
   data_frame_len++;
 
   /* Byte 2 to 3: ID */
-  data_frame[data_frame_len++] = id_lsb; /* lsb */
-  data_frame[data_frame_len++] = id_msb; /* msb */
+  data_frame[data_frame_len++] = id; /* lsb */
+  data_frame[data_frame_len++] = (id>>8) & 0xff; /* msb */
+  data_frame[data_frame_len++] = (id>>16) & 0xff; /* msb */
+  data_frame[data_frame_len++] = (id>>24) & 0xff; /* msb */
 
   /* Byte 4 to (4+data_len): Data */
   for (int i = 0; i < data_length_code; i++)
@@ -372,7 +375,7 @@ static int inject_data_frame(int tty_fd, const char *hex_id, const char *hex_dat
         binary_data[i]++;
     }
 
-    error = send_data_frame(tty_fd, CANUSB_FRAME_STANDARD, binary_id_lsb, binary_id_msb, binary_data, data_len);
+    error = send_data_frame(tty_fd, CANUSB_FRAME_STANDARD, binary_id_lsb, binary_data, data_len);
   }
 
   return error;

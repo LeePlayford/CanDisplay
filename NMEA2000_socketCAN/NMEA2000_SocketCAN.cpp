@@ -140,20 +140,46 @@ bool tNMEA2000_SocketCAN::CANOpen() {
     return true;
 }
 
-
+#if defined (__x86_64)
 //*****************************************************************************
 bool tNMEA2000_SocketCAN::CANSendFrame(unsigned long id, unsigned char len, const unsigned char *buf, bool wait_sent) {
    struct can_frame frame_wr;
+
+    frame_send (skt , buf , len);
 
    frame_wr.can_id  = id | CAN_EFF_FLAG;
    frame_wr.can_dlc = len;
    memcpy(frame_wr.data, buf, 8);
 
-   return (write(skt, &frame_wr, sizeof(frame_wr)) == sizeof(frame_wr));        // Send this frame out to the socketCAN handler
+   //int sent = write(skt, &frame_wr, sizeof(frame_wr));
+   int sent = send_data_frame(skt, CANUSB_FRAME_EXTENDED, id, buf, len);
+
+
+   return (sent == 0);        // Send this frame out to the socketCAN handler
 
              // socketCAN works to keeping all packets in-order, so
              // no need to do anything special for wait-sent
 }
+#else
+//*****************************************************************************
+bool tNMEA2000_SocketCAN::CANSendFrame(unsigned long id, unsigned char len, const unsigned char *buf, bool wait_sent) {
+    struct can_frame frame_wr;
+
+    frame_wr.can_id  = id | CAN_EFF_FLAG;
+    frame_wr.can_dlc = len;
+    memcpy(frame_wr.data, buf, 8);
+
+    int sent = write(skt, &frame_wr, sizeof(frame_wr));
+
+    return (sent == sizeof(frame_wr));        // Send this frame out to the socketCAN handler
+
+    // socketCAN works to keeping all packets in-order, so
+    // no need to do anything special for wait-sent
+}
+
+
+#endif
+
 #if defined (__x86_64__)
 //*****************************************************************************
 bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, unsigned char *buf) {
@@ -180,7 +206,7 @@ bool tNMEA2000_SocketCAN::CANGetFrame(unsigned long &id, unsigned char &len, uns
             }
         }
 
-        if (read(skt, &frame_rd, can_frame_size /*sizeof(frame_rd)*/) > 0)
+        if (read(skt, &frame_rd, can_frame_size) > 0)
         {
             memcpy(buf, &frame_rd[5] , 8);
             len = 8; //frame_rd.can_dlc;

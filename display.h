@@ -17,21 +17,24 @@ enum class DataItem {
     LON,
     SOG,
     COG,
-    DATA_ITEM_WIND_SPEED,
-    DATA_ITEM_DEPTH,
-    DATA_ITEM_FLUID_LEVEL,
-    BARO
+    DEPTH,
+    BARO,
+    HDG,
+    DATE,
+    TIME
 };
 
 class Display : public QObject
 {
     Q_OBJECT
+
 public:
-    Display(Ui::MainWindow * ui);
+    explicit Display(Ui::MainWindow * ui);
     void UpdateDisplay (DataItem dataItem, float value);
 
 private:
     void ConvertToDMS(float decimalDegrees, char* buffer, size_t bufferSize, bool isLatitude);
+    void UpdateWidgets (const char * dataItem, const char * buffer);
     Ui::MainWindow * m_pUi;
 };
 

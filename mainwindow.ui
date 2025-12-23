@@ -34,7 +34,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>24</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -53,7 +53,7 @@ QTabWidget::tab-bar {
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="iconSize">
      <size>
@@ -78,232 +78,18 @@ QTabWidget::tab-bar {
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="1">
-        <widget class="QGroupBox" name="groupBox_4">
-         <property name="title">
-          <string>AWA</string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_AWA">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>451</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>A W A</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_11">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>0</y>
-            <width>113</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>degrees</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 0);</string>
-         </property>
-         <property name="title">
-          <string>TWS</string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_TWS">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>451</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Noto Sans Gujarati</family>
-            <pointsize>64</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>T W S 0.0</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_TWS">
-          <property name="geometry">
-           <rect>
-            <x>342</x>
-            <y>10</y>
-            <width>131</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(0, 0, 0);</string>
-          </property>
-          <property name="text">
-           <string>Kts</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>AWS</string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_AWS">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>40</y>
-            <width>461</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>A W S</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_9">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>0</y>
-            <width>113</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Kts</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QGroupBox" name="groupBox_7">
-         <property name="title">
-          <string>Boat Water Speed </string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_BSP">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>451</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>B S P</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_17">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>0</y>
-            <width>113</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>kts</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QGroupBox" name="groupBox_6">
          <property name="title">
           <string>TWD</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_TWD">
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_TWD">
           <property name="geometry">
            <rect>
             <x>20</x>
-            <y>30</y>
+            <y>40</y>
             <width>451</width>
-            <height>101</height>
+            <height>91</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -326,7 +112,172 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_15">
+         <widget class="QLineEdit" name="lineEdit_Label_TWD">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>degrees</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QGroupBox" name="groupBox_7">
+         <property name="title">
+          <string>Boat Water Speed </string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_BSP">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>B S P</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Label_BSP">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>kts</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(0, 0, 0);</string>
+         </property>
+         <property name="title">
+          <string>TWS</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_TWS">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>101</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Noto Sans</family>
+            <pointsize>64</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(224, 27, 36);</string>
+          </property>
+          <property name="text">
+           <string>&lt; 0.0 &gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Label_TWS">
+          <property name="geometry">
+           <rect>
+            <x>342</x>
+            <y>10</y>
+            <width>131</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(0, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string>Kts</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>AWA</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_AWA">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>A W A</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Label_AWA">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -349,7 +300,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>TWA</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Wind_TWA">
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_TWA">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -372,13 +323,13 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>T W A 0.0</string>
+           <string>T W A</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_TWA">
+         <widget class="QLineEdit" name="lineEdit_Label_TWA">
           <property name="geometry">
            <rect>
             <x>370</x>
@@ -389,6 +340,58 @@ QTabWidget::tab-bar {
           </property>
           <property name="text">
            <string>degrees</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>AWS</string>
+         </property>
+         <widget class="QLineEdit" name="lineEdit_Wind_Data_AWS">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>451</width>
+            <height>91</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>4</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <family>Ubuntu Mono</family>
+            <pointsize>48</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>A W S</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_Label_AWS">
+          <property name="geometry">
+           <rect>
+            <x>360</x>
+            <y>0</y>
+            <width>113</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Kts</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -424,7 +427,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>AWA</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_12">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_TWS">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -453,7 +456,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_13">
+         <widget class="QLineEdit" name="lineEdit_Boat_Label_TWS">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -479,7 +482,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Depth</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Boat_Depth">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_Depth">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -508,7 +511,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_TWS_3">
+         <widget class="QLineEdit" name="lineEdit_Label_Depth">
           <property name="geometry">
            <rect>
             <x>342</x>
@@ -534,7 +537,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>AWS</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_8">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_AWS">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -563,7 +566,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_18">
+         <widget class="QLineEdit" name="lineEdit_Boat_Label_AWS">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -586,7 +589,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Boat Water Speed </string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_19">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_BSP">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -615,7 +618,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_20">
+         <widget class="QLineEdit" name="lineEdit_Boat_Label_BSP">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -625,7 +628,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string>Kts</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -638,7 +641,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>TWD</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_21">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_TWD">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -667,7 +670,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_22">
+         <widget class="QLineEdit" name="lineEdit_Boat_Label_TWD">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -688,9 +691,9 @@ QTabWidget::tab-bar {
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_13">
          <property name="title">
-          <string>TWA</string>
+          <string>Heading</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_TWA_2">
+         <widget class="QLineEdit" name="lineEdit_Boat_Data_HDG">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -713,13 +716,13 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>T W A</string>
+           <string>H D G</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_TWA_2">
+         <widget class="QLineEdit" name="lineEdit_Boat_Label_TWA">
           <property name="geometry">
            <rect>
             <x>370</x>
@@ -729,7 +732,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string>Degrees</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -759,7 +762,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Course Over Ground</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Position_COG">
+         <widget class="QLineEdit" name="lineEdit_Position_Data_COG">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -788,7 +791,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_16">
+         <widget class="QLineEdit" name="lineEdit_Position_Label_Cog">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -811,7 +814,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Speed Over Ground</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Position_SOG">
+         <widget class="QLineEdit" name="lineEdit_Position_Data_SOG">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -840,7 +843,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_23">
+         <widget class="QLineEdit" name="lineEdit_Position_Label_Sog">
           <property name="geometry">
            <rect>
             <x>360</x>
@@ -858,110 +861,6 @@ QTabWidget::tab-bar {
          </widget>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QGroupBox" name="groupBox_17">
-         <property name="title">
-          <string>Boat Water Speed </string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_24">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>451</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>B S P</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_25">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>0</y>
-            <width>113</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Unit Label 2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QGroupBox" name="groupBox_18">
-         <property name="title">
-          <string>TWD</string>
-         </property>
-         <widget class="QLineEdit" name="lineEdit_26">
-          <property name="geometry">
-           <rect>
-            <x>20</x>
-            <y>30</y>
-            <width>451</width>
-            <height>101</height>
-           </rect>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>4</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <family>Ubuntu Mono</family>
-            <pointsize>48</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>T W D</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-         <widget class="QLineEdit" name="lineEdit_27">
-          <property name="geometry">
-           <rect>
-            <x>360</x>
-            <y>0</y>
-            <width>113</width>
-            <height>26</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Unit Label 2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </widget>
-       </item>
        <item row="0" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox_15">
          <property name="styleSheet">
@@ -970,13 +869,13 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Position</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Position_Latitude">
+         <widget class="QLineEdit" name="lineEdit_Position_Data_Latitude">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>20</y>
+            <x>10</x>
+            <y>40</y>
             <width>951</width>
-            <height>61</height>
+            <height>81</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -999,13 +898,13 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_Data_Position_Longitude">
+         <widget class="QLineEdit" name="lineEdit_Position_Data_Longitude">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>80</y>
+            <x>10</x>
+            <y>120</y>
             <width>951</width>
-            <height>61</height>
+            <height>91</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -1052,7 +951,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>AWA</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_28">
+         <widget class="QLineEdit" name="lineEdit_Environment_Data_TWS">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -1091,7 +990,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string>Kts</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1107,7 +1006,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>Baro</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_Env_Baro">
+         <widget class="QLineEdit" name="lineEdit_Env_Data_Baro">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -1136,7 +1035,7 @@ QTabWidget::tab-bar {
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
-         <widget class="QLineEdit" name="lineEdit_TWS_4">
+         <widget class="QLineEdit" name="lineEdit_Environment_Label_Baro">
           <property name="geometry">
            <rect>
             <x>342</x>
@@ -1162,7 +1061,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>AWS</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_30">
+         <widget class="QLineEdit" name="lineEdit_Environment_Data_AWS">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -1201,7 +1100,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string>Kts</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1212,14 +1111,14 @@ QTabWidget::tab-bar {
        <item row="2" column="1">
         <widget class="QGroupBox" name="groupBox_22">
          <property name="title">
-          <string>Boat Water Speed </string>
+          <string>Date</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_32">
+         <widget class="QLineEdit" name="lineEdit_Environment_Data_Date">
           <property name="geometry">
            <rect>
-            <x>20</x>
-            <y>40</y>
-            <width>451</width>
+            <x>10</x>
+            <y>30</y>
+            <width>471</width>
             <height>101</height>
            </rect>
           </property>
@@ -1237,7 +1136,7 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>B S P</string>
+           <string>D A T E</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -1253,7 +1152,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1264,9 +1163,9 @@ QTabWidget::tab-bar {
        <item row="2" column="0">
         <widget class="QGroupBox" name="groupBox_23">
          <property name="title">
-          <string>TWD</string>
+          <string>Time</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_34">
+         <widget class="QLineEdit" name="lineEdit_EnvironMent_Data_Time">
           <property name="geometry">
            <rect>
             <x>20</x>
@@ -1289,7 +1188,7 @@ QTabWidget::tab-bar {
            </font>
           </property>
           <property name="text">
-           <string>T W D</string>
+           <string>T I M E</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -1305,7 +1204,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string/>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1318,7 +1217,7 @@ QTabWidget::tab-bar {
          <property name="title">
           <string>TWA</string>
          </property>
-         <widget class="QLineEdit" name="lineEdit_Data_TWA_3">
+         <widget class="QLineEdit" name="lineEdit_Environment_Data_TWA">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -1357,7 +1256,7 @@ QTabWidget::tab-bar {
            </rect>
           </property>
           <property name="text">
-           <string>Unit Label 2</string>
+           <string>Degrees</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1366,6 +1265,92 @@ QTabWidget::tab-bar {
         </widget>
        </item>
       </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_WindGauge">
+     <attribute name="title">
+      <string>Wind Gauge</string>
+     </attribute>
+     <widget class="QGraphicsView" name="graphicsView_wind">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>1001</width>
+        <height>501</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_Diags">
+     <attribute name="title">
+      <string>Diags</string>
+     </attribute>
+     <widget class="QListWidget" name="listWidget_Devices">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>431</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget_PGNS">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>70</y>
+        <width>471</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>10</y>
+        <width>231</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Can Devices</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>10</y>
+        <width>231</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Device PGNS</string>
+      </property>
      </widget>
     </widget>
    </widget>
