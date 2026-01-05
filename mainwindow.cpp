@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <iostream>
+#include <time.h>
 
 #include <QFontDatabase>
 #include <QDir>
@@ -79,6 +80,7 @@ void OnN2kOpen()
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , m_dateTimeSet(false)
 {
     // Set Widget Fonts and Gauge
     SetUpFonts();
@@ -165,14 +167,16 @@ void MainWindow::timerexpired()
     txpired();
 
     static uchar count = 0;
-    static int pointer = 0;
     if (count++ == 0)
     {
-        tN2kMsg N2kMsg;
-        SetN2kPGN59904 (N2kMsg , 255 , 126996);
-        NMEA2000.SendMsg(N2kMsg);
-        pointer+=10;
-        //mCompassNeedle->setCurrentValue(pointer%360);
+        QList<int> missing = s_pDevices->GetMissingProductData();
+        foreach (auto & item , missing)
+        {
+            tN2kMsg N2kMsg;
+            SetN2kPGN59904 (N2kMsg , item , 126996);
+            NMEA2000.SendMsg(N2kMsg);
+            qDebug() << "Sending Product Request " << item;
+        }
     }
 }
 
@@ -282,8 +286,6 @@ void WaterDepth(const tN2kMsg &N2kMsg) {
     }
 }
 
-
-
 //-------------------------------------
 //
 //-------------------------------------
@@ -322,10 +324,41 @@ void GPSPosition(const tN2kMsg &N2kMsg) {
 
         s_pDisplayInstance->UpdateDisplay(DataItem::TIME , SecondsSinceMidnight);
         s_pDisplayInstance->UpdateDisplay(DataItem::DATE , DaysSince1970);
+
+        s_pDevices->SetSeconds(SecondsSinceMidnight);
+
+        // set the time and date, but only once
+//#if defined (__aarch64__)
+        if (!s_MainWindowInstance->IsDateTimeSet())
+        {
+            time_t rawtime = DaysSince1970 * 86400; // Convert days to seconds
+            struct tm * timeinfo = gmtime(&rawtime);
+            mktime(timeinfo); // Normalize the time structure
+            if (timeinfo->tm_year > 01)
+            {
+                timeinfo->tm_hour = static_cast<int>(SecondsSinceMidnight / 3600);
+                timeinfo->tm_min = static_cast<int>((SecondsSinceMidnight - (timeinfo->tm_hour * 3600)) / 60);
+                timeinfo->tm_sec = static_cast<int>(SecondsSinceMidnight) % 60;
+                time_t time = mktime(timeinfo);
+                if (time != (time_t) -1)
+                    ctime(&time);
+                QString dateTime = QString("sudo date -s \'%1-%2-%3 %4:%5:%6\'")
+                                       .arg(timeinfo->tm_year+1900)
+                                       .arg(timeinfo->tm_mon+1 , 2 ,10, QLatin1Char('0'))
+                                       .arg(timeinfo->tm_mday, 2 ,10, QLatin1Char('0'))
+                                       .arg(timeinfo->tm_hour, 2 ,10, QLatin1Char('0'))
+                                       .arg(timeinfo->tm_min, 2 ,10, QLatin1Char('0'))
+                                       .arg(timeinfo->tm_sec, 2 ,10, QLatin1Char('0'));
+
+                qDebug() << "Setting Time " << dateTime;
+                s_MainWindowInstance->SetDateTime();
+#if defined (__aarch64__)
+                system (dateTime.toStdString().c_str());
+#endif
+            }
+        }
     }
 }
-
-
 
 //-------------------------------------
 //
@@ -548,8 +581,10 @@ void MainWindow::SetUpWindGauge()
 //----------------------------------------------
 #if defined (__x86_64)
 const int DataFontSize = 64;
+const int SingleFontSize = 292;
 #else
-const int DataFontSize = 96;
+const int DataFontSize = 112;
+const int SingleFontSize = 400;
 #endif
 
 void MainWindow::SetUpFonts()
@@ -561,6 +596,7 @@ void MainWindow::SetUpFonts()
     QFont dataFont;
     QFont labelFont;
     QFont tabFont;
+    QFont SingleFont;
 
     int id = QFontDatabase::addApplicationFont(".fonts/NotoSans-Bold.ttf");
     if (id == 0)
@@ -568,10 +604,18 @@ void MainWindow::SetUpFonts()
         QString data = QFontDatabase::applicationFontFamilies(id).at(0);
         dataFont.setFamily(data);
         dataFont.setPointSize(DataFontSize);
+
         labelFont.setFamily(data);
-        labelFont.setPointSize(24);
+        labelFont.setPointSize(20);
+
         tabFont.setFamily(data);
-        tabFont.setPointSize(34);
+        tabFont.setPointSize(36);
+        tabFont.setBold(true);
+
+        SingleFont.setFamily(data);
+        SingleFont.setPointSize(SingleFontSize);
+        SingleFont.setBold(true);
+
     }
     else
         qDebug() << "Font Not Found";
@@ -579,18 +623,38 @@ void MainWindow::SetUpFonts()
     ui->setupUi(this);
     qDebug () << qVersion();
 
+    ui->tabWidget->tabBar()->setStyleSheet("QTabBar::tab:selected {\
+                                   color: #00ff00;\
+                                   background-color: rgb(220, 138, 221);\
+                                   color: rgb(0,0,0);\
+                               }");
+
     QWidgetList  list = QApplication::allWidgets();
 
     for (auto item : list)
     {
+        if (item->objectName().contains("groupBox"))
+        {
+            item->setStyleSheet("QGroupBox {border: 5px solid rgb(220, 138, 221); margin: 1px; border-radius: 10px }\
+                                 QGroupBox::title { left: 10px; top: 5px }");
+            item->setFont(labelFont);
+        }
         if (item->objectName().contains(QString ("Data") , Qt::CaseSensitive))
         {
             item->setFont(dataFont);
+            item->setEnabled(false);
         }
         else if (item->objectName().contains(QString ("Label") , Qt::CaseSensitive))
         {
             item->setFont(labelFont);
+            item->setEnabled(false);
         }
+        if (item->objectName().contains(QString ("Single_Data") , Qt::CaseSensitive))
+        {
+            item->setFont(SingleFont);
+            item->setEnabled(false);
+        }
+
 
     }
 }

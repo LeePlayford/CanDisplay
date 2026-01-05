@@ -24,6 +24,8 @@ public:
     QcNeedleItem *mCompassNeedle;
 
     Ui::MainWindow *GetUi() {return ui;}
+    bool IsDateTimeSet() {return m_dateTimeSet;}
+    void SetDateTime() { m_dateTimeSet = true;}
 
 
 private:
@@ -37,7 +39,7 @@ private:
     QcGaugeWidget * mCompassGauge;
     QcGaugeWidget * mSpeedGauge;
     QcNeedleItem *mSpeedNeedle;
-
+    bool m_dateTimeSet;
 
     void SetUpFonts();
     void SetUpWindGauge();

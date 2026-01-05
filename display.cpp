@@ -20,11 +20,11 @@ QString GetCurrentDate(unsigned long DaysSince1970)
     time_t rawtime = DaysSince1970 * 86400; // Convert days to seconds
     struct tm * timeinfo = gmtime(&rawtime);
     mktime(timeinfo); // Normalize the time structure
-    int m_currentYear = timeinfo->tm_year + 1900; // tm_year is years since 1900
+    timeinfo->tm_year -= 100; // tm_year is years since 1900
     if (timeinfo->tm_year > 01)
     {
         char buffer[20];
-        strftime(buffer, sizeof(buffer), "%d %b %Y", timeinfo);
+        strftime(buffer, sizeof(buffer), "%d %b %y", timeinfo);
         return QString(buffer);
     }
     return QString ("");
@@ -55,6 +55,7 @@ QString GetCurrentTime(double secondsSinceMidnight)
 void Display::UpdateDisplay (DataItem dataItem, float value)
 {
     char buf[32];
+    bool indicateAWAError = false;
     // Update the display based on the data item type
 
     switch (dataItem)
@@ -73,8 +74,19 @@ void Display::UpdateDisplay (DataItem dataItem, float value)
         {
             sprintf(buf, " %.f° >", std::abs(value));
         }
+        if (std::abs(value) < 35 || std::abs(value)> 165 )
+        {
+            //indicateAWAError = true;
+            m_pUi->lineEdit_Single_Data_AWA->setStyleSheet("background-color: qlineargradient(spread:pad, x1:1, y1:0.256, x2:1, y2:1, stop:0 rgba(224, 27, 36, 255), stop:1 rgba(255, 255, 255, 255));");
+        }
+        else
+        {
+            m_pUi->lineEdit_Single_Data_AWA->setStyleSheet("");
+        }
+
         // Update the AWA label with the absolute value
         UpdateWidgets ("Data_AWA" , buf);
+
         //SetWindValue (value);
         break;
 
