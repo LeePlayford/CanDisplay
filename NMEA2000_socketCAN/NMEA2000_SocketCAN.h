@@ -60,6 +60,10 @@ protected:
 
 public:
     tNMEA2000_SocketCAN(char* CANport=NULL);
+    bool IsFastPacket(unsigned long PGN)
+    {
+        return IsFastPacketPGN(PGN);
+    }
 
 };
 

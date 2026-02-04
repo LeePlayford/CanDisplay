@@ -26,8 +26,8 @@
 #include <NMEA2000.h>
 #include <N2kMessages.h>
 
-#include "display.h"
-#include "devices.h"
+
+#include "Parser.h"
 
 void HandleNMEA2000Msg(const tN2kMsg &N2kMsg);
 
@@ -40,6 +40,10 @@ void GPSCogSog(const tN2kMsg &N2kMsg);
 void Baro(const tN2kMsg &N2kMsg);
 void Heading(const tN2kMsg &N2kMsg);
 void ProductInfo(const tN2kMsg & N2kMsg);
+void Voltage(const tN2kMsg & N2kMsg);
+void Temperature(const tN2kMsg & N2kMsg);
+void SeaTemperature(const tN2kMsg & N2kMsg);
+void WaterTemperature(const tN2kMsg & N2kMsg);
 
 
 typedef struct {
@@ -48,21 +52,24 @@ typedef struct {
 } tNMEA2000Handler;
 
 tNMEA2000Handler NMEA2000Handlers[]={
-    {127505L,&FluidLevel},
+ /*   {127505L,&FluidLevel},
     {127250L,&Heading},
+    {127508L,&Voltage},
     {128267L,&WaterDepth},
     {130306L,&WindData},
     {128259L,&BoatSpeed},
     {129029L,&GPSPosition},
     {129026L,&GPSCogSog},
+    {130310L,&WaterTemperature},
+    {130312L,&SeaTemperature},
     {130314L,&Baro},
-    {126996L , &ProductInfo},
+    {130316L,&Temperature},
+    {126996L , &ProductInfo},*/
     {0,0}
 };
 
-static Display * s_pDisplayInstance;
 static MainWindow * s_MainWindowInstance;
-static devices * s_pDevices;
+static Parser * s_pParser;
 
 
 //------------------------------------------------------------
@@ -80,12 +87,15 @@ void OnN2kOpen()
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_dateTimeSet(false)
 {
     // Set Widget Fonts and Gauge
     SetUpFonts();
 
-    s_pDevices = new devices(ui);
+    // set up the dialog
+    m_pPGNDialog = new Ui::Dialog();
+
+    //PGNDialog->setupUi(&m_dlg);
+    s_pParser = new Parser(ui , m_pPGNDialog , (tNMEA2000_SocketCAN*) &NMEA2000);
 
     // start up the NMEA2000
     // Initialize NMEA2000
@@ -98,6 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
     NMEA2000.SetProductInformation("RPI", 101, "Can_Display", "1.0.0.1", "1.0.0.1");
     NMEA2000.SetDeviceInformation(1, 130, 204, 1);
+    NMEA2000.SetConfigurationInformation("Lee Playford" , "Baro Boards" , "Developments");
     NMEA2000.EnableForward(false);
     NMEA2000.SetMsgHandler (HandleNMEA2000Msg);
     NMEA2000.SetOnOpen(OnN2kOpen);
@@ -115,12 +126,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect (m_timer , &QTimer::timeout , this , &MainWindow::timerexpired);
     connect (ui->tabWidget , &QTabWidget::currentChanged , this , &MainWindow::tabChanged);
 
-    s_pDisplayInstance = new Display (ui);
     s_MainWindowInstance = this;
 
     // set u p the wind gauge
     SetUpWindGauge();
-
 
 }
 
@@ -146,7 +155,7 @@ void MainWindow::tabChanged()
     }
     else if (ui->tabWidget->currentIndex() == 5)
     {
-        s_pDevices->Update();
+        s_pParser->Update();
     }
 }
 
@@ -169,13 +178,18 @@ void MainWindow::timerexpired()
     static uchar count = 0;
     if (count++ == 0)
     {
-        QList<int> missing = s_pDevices->GetMissingProductData();
+        QList<int> missing = s_pParser->GetMissingProductData();
         foreach (auto & item , missing)
         {
             tN2kMsg N2kMsg;
             SetN2kPGN59904 (N2kMsg , item , 126996);
             NMEA2000.SendMsg(N2kMsg);
             qDebug() << "Sending Product Request " << item;
+            usleep(5000);
+            tN2kMsg N2kMsg1;
+            SetN2kPGN59904 (N2kMsg1 , item , 126998);
+            NMEA2000.SendMsg(N2kMsg1);
+            qDebug() << "Sending Config Request " << item;
         }
     }
 }
@@ -186,8 +200,7 @@ void MainWindow::timerexpired()
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete s_pDevices;
-    delete s_pDisplayInstance;
+    delete s_pParser;
 }
 
 //-------------------------------------
@@ -205,160 +218,9 @@ void HandleNMEA2000Msg(const tN2kMsg &N2kMsg)
     }
 
     // add data into a list
-    s_pDevices->AddPGN(N2kMsg.Source , N2kMsg.PGN);
+    s_pParser->AddPGN(N2kMsg);
 }
 
-//-------------------------------------
-//
-//-------------------------------------
-void ProductInfo(const tN2kMsg & N2kMsg)
-{
-    unsigned short N2kVersion;
-    unsigned short ProductCode;
-    int ModelIDSize = 48;
-    char ModelID[48];
-    int SwCodeSize = 32;
-    char SwCode[32];
-    int ModelVersionSize=32;
-    char ModelVersion[32];
-    int ModelSerialCodeSize = 32;
-    char ModelSerialCode[32];
-    unsigned char CertificationLevel;
-    unsigned char LoadEquivalency;
-    if (ParseN2kPGN126996(N2kMsg , N2kVersion , ProductCode , ModelIDSize , ModelID ,
-                      SwCodeSize , SwCode , ModelVersionSize , ModelVersion ,
-                          ModelSerialCodeSize , ModelSerialCode , CertificationLevel , LoadEquivalency))
-    {
-        // stick it in a window somwhere
-        QString deviceName (ModelID);
-        s_pDevices->AddDeviceName(N2kMsg.Source , deviceName);
-    }
-}
-
-//-------------------------------------
-//
-//-------------------------------------
-void Baro(const tN2kMsg &N2kMsg) {
-    unsigned char SID;
-    unsigned char PressureInstance;
-    tN2kPressureSource source;
-    double Baro;
-
-    if (ParseN2kPGN130314(N2kMsg,SID,PressureInstance, source, Baro) )
-    {
-        s_pDisplayInstance->UpdateDisplay(DataItem::BARO , Baro);
-    }
-}
-
-//-------------------------------------
-//
-//-------------------------------------
-void Heading(const tN2kMsg &N2kMsg) {
-    unsigned char SID;
-    tN2kHeadingReference headingRef;
-    double heading , deviation , variation;
-
-    if (ParseN2kHeading(N2kMsg,SID,heading , deviation , variation , headingRef) && heading > 0)
-    {
-        s_pDisplayInstance->UpdateDisplay(DataItem::HDG , RadToDeg(heading));
-    }
-}
-
-//-------------------------------------
-//
-//-------------------------------------
-void WaterDepth(const tN2kMsg &N2kMsg) {
-    unsigned char SID;
-    double DepthBelowTransducer;
-    double Offset;
-
-    if (ParseN2kWaterDepth(N2kMsg,SID,DepthBelowTransducer,Offset) ) {
-        if (Offset>0) {
-            char buf[32];
-            sprintf(buf,"Depth %.2f m",DepthBelowTransducer);
-            s_pDisplayInstance->UpdateDisplay(DataItem::DEPTH , DepthBelowTransducer);
-
-        } else {
-            char buf[32];
-            sprintf(buf,"Depth %.2f m",DepthBelowTransducer);
-            s_pDisplayInstance->UpdateDisplay(DataItem::DEPTH , DepthBelowTransducer);
-        }
-    }
-}
-
-//-------------------------------------
-//
-//-------------------------------------
-void GPSPosition(const tN2kMsg &N2kMsg) {
-    unsigned char SID;
-    uint16_t DaysSince1970;
-    double SecondsSinceMidnight;
-    double Altitude;
-    tN2kGNSStype GNSStype;
-    tN2kGNSSmethod GNSSmethod;
-    unsigned char nSatellites;
-    double HDOP;
-    double PDOP;
-    double GeoidalSeparation;
-    unsigned char nReferenceStations;
-    tN2kGNSStype ReferenceStationType;
-    uint16_t ReferenceSationID;
-    double AgeOfCorrection;
-    double Latitude;
-    double Longitude;
-
-    if (ParseN2kPGN129029 (N2kMsg , SID , DaysSince1970 , SecondsSinceMidnight ,
-                          Latitude , Longitude , Altitude ,
-                          GNSStype , GNSSmethod ,
-                          nSatellites , HDOP , PDOP , GeoidalSeparation ,
-                          nReferenceStations , ReferenceStationType , ReferenceSationID ,
-                          AgeOfCorrection
-                          ))
-    {
-        //ESP_LOGI(NMEA , "GPS Position: Lat %.6f, Lon %.6f", Latitude, Longitude);
-
-        if (Latitude >= -90.f && Latitude <= 90.f)
-            s_pDisplayInstance->UpdateDisplay (DataItem::LAT , (Latitude));
-        if (Longitude >= -180.f && Latitude <= 180.f)
-            s_pDisplayInstance->UpdateDisplay (DataItem::LON , (Longitude));
-
-        s_pDisplayInstance->UpdateDisplay(DataItem::TIME , SecondsSinceMidnight);
-        s_pDisplayInstance->UpdateDisplay(DataItem::DATE , DaysSince1970);
-
-        s_pDevices->SetSeconds(SecondsSinceMidnight);
-
-        // set the time and date, but only once
-//#if defined (__aarch64__)
-        if (!s_MainWindowInstance->IsDateTimeSet())
-        {
-            time_t rawtime = DaysSince1970 * 86400; // Convert days to seconds
-            struct tm * timeinfo = gmtime(&rawtime);
-            mktime(timeinfo); // Normalize the time structure
-            if (timeinfo->tm_year > 01)
-            {
-                timeinfo->tm_hour = static_cast<int>(SecondsSinceMidnight / 3600);
-                timeinfo->tm_min = static_cast<int>((SecondsSinceMidnight - (timeinfo->tm_hour * 3600)) / 60);
-                timeinfo->tm_sec = static_cast<int>(SecondsSinceMidnight) % 60;
-                time_t time = mktime(timeinfo);
-                if (time != (time_t) -1)
-                    ctime(&time);
-                QString dateTime = QString("sudo date -s \'%1-%2-%3 %4:%5:%6\'")
-                                       .arg(timeinfo->tm_year+1900)
-                                       .arg(timeinfo->tm_mon+1 , 2 ,10, QLatin1Char('0'))
-                                       .arg(timeinfo->tm_mday, 2 ,10, QLatin1Char('0'))
-                                       .arg(timeinfo->tm_hour, 2 ,10, QLatin1Char('0'))
-                                       .arg(timeinfo->tm_min, 2 ,10, QLatin1Char('0'))
-                                       .arg(timeinfo->tm_sec, 2 ,10, QLatin1Char('0'));
-
-                qDebug() << "Setting Time " << dateTime;
-                s_MainWindowInstance->SetDateTime();
-#if defined (__aarch64__)
-                system (dateTime.toStdString().c_str());
-#endif
-            }
-        }
-    }
-}
 
 //-------------------------------------
 //
@@ -370,97 +232,20 @@ void FluidLevel(const tN2kMsg &N2kMsg) {
     double Capacity=0;*/
 }
 
-//-------------------------------------
-//
-//-------------------------------------
-void BoatSpeed(const tN2kMsg &N2kMsg)
-{
-    unsigned char SID;
-    double BoatSpeed;
-    double GroundReferenced;
-    tN2kSpeedWaterReferenceType SWRT;
-
-    if (ParseN2kPGN128259 (N2kMsg, SID, BoatSpeed , GroundReferenced, SWRT))
-    {
-        s_pDisplayInstance->UpdateDisplay (DataItem::BSP , msToKnots(BoatSpeed));
-    }
-}
 
 //-------------------------------------
 //
 //-------------------------------------
-void GPSCogSog(const tN2kMsg &N2kMsg)
+void Temperature(const tN2kMsg &N2kMsg)
 {
     unsigned char SID;
-    tN2kHeadingReference ref;
-    double COG;
-    double SOG;
+    double ActualTemperature , setTemperature;
+    unsigned char TempInstance;
+    tN2kTempSource tempSource;
 
-    if (ParseN2kPGN129026 (N2kMsg, SID, ref , COG , SOG))
+    if (ParseN2kPGN130316 (N2kMsg, SID , TempInstance , tempSource , ActualTemperature , setTemperature ))
     {
-        s_pDisplayInstance->UpdateDisplay (DataItem::SOG , msToKnots(SOG));
-        s_pDisplayInstance->UpdateDisplay (DataItem::COG , RadToDeg(COG));
-    }
-}
-
-
-//-------------------------------------
-//
-//-------------------------------------
-void WindData(const tN2kMsg &N2kMsg)
-{
-    unsigned char SID;
-    double WindSpeed;
-    double WindAngle;
-    tN2kWindReference WindReference;
-    // Parse the N2kMsg for wind data
-    if (ParseN2kPGN130306(N2kMsg , SID , WindSpeed , WindAngle , WindReference))
-    {
-        switch (WindReference)
-        {
-        case N2kWind_True_North:
-            s_pDisplayInstance->UpdateDisplay (DataItem::TWD , RadToDeg(WindAngle));
-            break;
-        case N2kWind_Magnetic:
-            //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (Magnetic)", WindSpeed, WindAngle);
-            break;
-        case N2kWind_Apparent:
-        {
-            //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (Apparent)", WindSpeed, WindAngle);
-
-            s_pDisplayInstance->UpdateDisplay (DataItem::AWS , msToKnots(WindSpeed));
-            double AWA = RadToDeg(WindAngle);
-            if (AWA > 180.0)
-            {
-                AWA -= 360.0; // Normalize to -180 to 180 degrees
-            }
-            s_pDisplayInstance->UpdateDisplay (DataItem::AWA , AWA);
-            AWA += 90.f;
-            if (AWA < 0.f) AWA+=360.f;
-            s_MainWindowInstance->mCompassNeedle->setCurrentValue(AWA);
-            break;
-        }
-        case N2kWind_True_boat:
-        {
-            s_pDisplayInstance->UpdateDisplay (DataItem::TWS , msToKnots(WindSpeed));
-            double TWA = RadToDeg(WindAngle);
-            if (TWA > 180.0)
-            {
-                TWA -= 360.0; // Normalize to -180 to 180 degrees
-            }
-            s_pDisplayInstance->UpdateDisplay (DataItem::TWA , TWA);
-            break;
-        }
-
-            //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (True Boat)", WindSpeed, WindAngle);
-            break;
-        case N2kWind_True_water:
-            //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (True Water)", WindSpeed, WindAngle);
-            break;
-        default:
-            //ESP_LOGI(NMEA , "Wind Speed: %.2f m/s, Wind Angle: %.2f degrees (Unknown Reference)", WindSpeed, WindAngle);
-            break;
-        }
+        //s_pDisplayInstance->UpdateDisplay (DataItem::TEMP , KelvinToC(ActualTemperature));
     }
 }
 
@@ -587,6 +372,9 @@ const int DataFontSize = 112;
 const int SingleFontSize = 400;
 #endif
 
+//----------------------------------------------
+//
+//----------------------------------------------
 void MainWindow::SetUpFonts()
 {
     // load fonts

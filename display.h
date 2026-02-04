@@ -21,7 +21,9 @@ enum class DataItem {
     BARO,
     HDG,
     DATE,
-    TIME
+    TIME,
+    TEMP,
+    VOLT
 };
 
 class Display : public QObject

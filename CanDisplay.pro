@@ -24,7 +24,7 @@ SOURCES += \
     NMEA2000/N2kTimer.cpp \
     NMEA2000/NMEA2000.cpp \
     NMEA2000_socketCAN/NMEA2000_SocketCAN.cpp \
-    devices.cpp \
+    Parser.cpp \
     display.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -50,12 +50,14 @@ HEADERS += \
     NMEA2000/RingBuffer.h \
     NMEA2000/RingBuffer.tpp \
     NMEA2000_socketCAN/NMEA2000_SocketCAN.h \
-    devices.h \
+    Parser.h \
+    ProcessCancelHelper.h \
     display.h \
     mainwindow.h \
     qcgaugewidget.h
 
 FORMS += \
+    PGNData.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

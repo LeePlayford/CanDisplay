@@ -6,6 +6,8 @@
 #include <QGraphicsScene>
 #include "qcgaugewidget.h"
 
+#include "ui_PGNData.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -24,22 +26,21 @@ public:
     QcNeedleItem *mCompassNeedle;
 
     Ui::MainWindow *GetUi() {return ui;}
-    bool IsDateTimeSet() {return m_dateTimeSet;}
-    void SetDateTime() { m_dateTimeSet = true;}
+
 
 
 private:
     Ui::MainWindow *ui;
     QTimer * m_timer;
+    QDialog m_dlg;
 
-
+    Ui::Dialog* m_pPGNDialog;
 
     QGraphicsScene * gScene;
 
     QcGaugeWidget * mCompassGauge;
     QcGaugeWidget * mSpeedGauge;
     QcNeedleItem *mSpeedNeedle;
-    bool m_dateTimeSet;
 
     void SetUpFonts();
     void SetUpWindGauge();

@@ -44,7 +44,9 @@ QString GetCurrentTime(double secondsSinceMidnight)
     {
         hours = (hours + 1) % 24; // Adjust for DST
     }*/
-    return QString ("%1:%2:%3").arg (hours).arg(minutes).arg(seconds);
+    return QString ("%1:%2:%3").arg (hours,2,10, QLatin1Char('0'))
+                                .arg(minutes,2,10, QLatin1Char('0'))
+                                .arg(seconds,2,10, QLatin1Char('0'));
 
 }
 
@@ -144,13 +146,23 @@ void Display::UpdateDisplay (DataItem dataItem, float value)
         break;
 
     case DataItem::BARO:
-        sprintf(buf, "%.f", value / 100.0f);
+        sprintf(buf, "%.01f", value);
         UpdateWidgets ("Data_Baro" , buf);
         break;
 
     case DataItem::HDG:
         sprintf(buf, "%.f°", value);
         UpdateWidgets ("Data_HDG" , buf);
+        break;
+
+    case DataItem::TEMP:
+        sprintf(buf, "%.f°C", value);
+        UpdateWidgets ("Data_Temp" , buf);
+        break;
+
+    case DataItem::VOLT:
+        sprintf(buf, "%.1f", value);
+        UpdateWidgets ("Data_Volt" , buf);
         break;
 
     case DataItem::TIME:

@@ -66,6 +66,7 @@ const char *N2kEnumTypeEmpty="";
  * @param OutputStream  stream handler for the output
  * @param addLF         add a line feed (default = true)
  */
+/*
 template<typename T> void PrintN2kEnumType(T a, Stream *OutputStream, bool addLF=true) {
   const char *str=N2kEnumTypeToStr(a);
   if (str[0] != '\0') {
@@ -73,7 +74,7 @@ template<typename T> void PrintN2kEnumType(T a, Stream *OutputStream, bool addLF
   } else {
     OutputStream->print(F("unknown (")); OutputStream->print(a); OutputStream->println(F(")"));
   }
-}
+}*/
 /************************************************************************//**
  * \brief Macro function for converting various N2k Enums to a const char
  * 
