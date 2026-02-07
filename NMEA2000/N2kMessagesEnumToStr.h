@@ -273,7 +273,7 @@ const char* tN2kMagneticVariationStrs[] = { "Manual","Automatic Chart","Automati
 /************************************************************************//**
  * \brief Converting the N2k enum \ref tN2kMagneticVariation to a const char
  */
-MakeN2kEnumTypeToStrFunc(tN2kMagneticVariation, tN2kSpeedWaterReferenceTypeStrs);
+MakeN2kEnumTypeToStrFunc(tN2kMagneticVariation, tN2kMagneticVariationStrs);
 
 /************************************************************************//**
  * \brief string representation of the N2k enum tN2kXTEModeStrs

@@ -117,6 +117,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Liberation Mono</family>
      <pointsize>14</pointsize>
     </font>
    </property>

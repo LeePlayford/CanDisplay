@@ -23,7 +23,9 @@ enum class DataItem {
     DATE,
     TIME,
     TEMP,
-    VOLT
+    VOLT,
+    SET,
+    DRIFT
 };
 
 class Display : public QObject

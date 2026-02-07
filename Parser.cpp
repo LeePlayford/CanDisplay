@@ -17,6 +17,7 @@
 #include "ProcessCancelHelper.h"
 
 #include "NMEA2000/N2kMessagesEnumToStr.h"
+#include "NMEA2000/N2kMessages.h"
 #include "NMEA2000_socketCAN/NMEA2000_SocketCAN.h"
 
 static Display * s_pDisplayInstance;
@@ -73,6 +74,18 @@ QMap<unsigned long , QString> PGN2Str {
 
 
 };
+
+//---------------------------------
+// Str Parsers
+//---------------------------------
+const char * tN2kAISTransceiverInformationStr[] {
+    "AIS channel A VDL reception",         ///< Channel A VDL reception
+    "AIS channel B VDL reception",         ///< Channel B VDL reception
+    "AIS channel A VDL transmission",      ///< Channel A VDL transmission
+    "AIS channel B VDL transmission",      ///< Channel B VDL transmission
+    "AIS own_information_not_broadcast"    ///< Own information not broadcast
+};
+
 
 //-----------------------------
 //
@@ -358,14 +371,20 @@ void Parser::UpdateDisplay(const tN2kMsg & p_rN2kMsg)
         case 126996: Handle126996(p_rN2kMsg); break;    // Product Info
         case 126998: Handle126998(p_rN2kMsg); break;    // Default Group Handler
         case 127250: Handle127250(p_rN2kMsg); break;    // Heading
-        case 127258: Handle127258(p_rN2kMsg); break;    // Battery Status
+        case 127258: Handle127258(p_rN2kMsg); break;    // Magnetic Variation
+        case 127508: Handle127508(p_rN2kMsg); break;    // Battery Status
         case 128259: Handle128259(p_rN2kMsg); break;    // Speed Water Referenced
         case 128267: Handle128267(p_rN2kMsg); break;    // Water Depth
+        case 128275: Handle128275(p_rN2kMsg); break;    // Speed Log
         case 129025: Handle129025(p_rN2kMsg); break;    // Position Rapid Update
         case 129026: Handle129026(p_rN2kMsg); break;    // COG SOG Rapid Update
         case 129029: Handle129029(p_rN2kMsg); break;    // GNSS
         case 129038: Handle129038(p_rN2kMsg); break;    // Class A Position Report
         case 129039: Handle129039(p_rN2kMsg); break;    // Class B Position Report
+        case 129291: Handle129291(p_rN2kMsg); break;    // Set Drift, Rapid Update
+        case 129794: Handle129794(p_rN2kMsg); break;    // Class A Static and Voyage Data
+        case 129809: Handle129809(p_rN2kMsg); break;    // Class Static Data Report Part A
+        case 129810: Handle129810(p_rN2kMsg); break;    // Class Static Data Report Part B
         case 130306: Handle130306(p_rN2kMsg); break;    // Wind Data
         case 130310: Handle130310(p_rN2kMsg); break;    // Environment Data
         case 130312: Handle130312(p_rN2kMsg); break;    // Environment Data
@@ -515,7 +534,7 @@ void Parser::Handle126996(const tN2kMsg & p_rN2kMsg)
 }
 
 //--------------------------------------------
-// Default Group Handler 126998
+// Config Information 126998
 //--------------------------------------------
 void Parser::Handle126998(const tN2kMsg & p_rN2kMsg)
 {
@@ -549,9 +568,9 @@ void Parser::Handle126998(const tN2kMsg & p_rN2kMsg)
 
         std::sprintf (m_buffer ,
                      "Configuration Information\n\n \
-                             Field 1\t%s\n \
-                             Field 2\t%s\n \
-                             Field 3\t%s",
+ Field 1\t%s\n \
+ Field 2\t%s\n \
+ Field 3\t%s",
                              Field1 , Field2 , Field3);
     }
 }
@@ -579,18 +598,48 @@ void Parser::Handle127250(const tN2kMsg & p_rN2kMsg)
         std::sprintf (m_buffer ,
                 "Heading Data\n\n \
     Seq\t\t%d\n \
-    Heading\t%.01f\n \
-    Deviation\t%.01f\n \
-    Variation\t%.01f\n \
+    Heading\t\t%.01f°\n \
+    Deviation\t%.01f°\n \
+    Variation\t%.01f°\n \
     Heading Ref\t%s",
                 sequence,RadToDeg(heading), RadToDeg(deviation), RadToDeg(variation), hdgRefStr);
     }
 }
 
 //-------------------------------------
-// Battery Status 127258
+// Magnetic Variation 127258
 //-------------------------------------
 void Parser::Handle127258(const tN2kMsg &p_rN2kMsg)
+{
+    unsigned char SID;
+    tN2kMagneticVariation Source;
+    uint16_t DaysSince1970;
+    double Variation;
+
+    if (ParseN2kPGN127258 (p_rN2kMsg,  SID ,  Source , DaysSince1970 , Variation))
+    {
+        //s_pDisplayInstance->UpdateDisplay (DataItem::VOLT , ActualVoltage);
+    }
+
+    if (m_DialogActive)
+    {
+        const char * magRefStr = N2kEnumTypeToStr(static_cast<tN2kMagneticVariation>(Source&0xf));
+
+        std::sprintf (m_buffer ,
+                     "Magnetic Variation\n\n \
+Instance\t%d\n \
+Source\t%s\n \
+Age in Days\t%d\n \
+Variation\t%.01f\n ",
+        SID,magRefStr,DaysSince1970,Variation);
+
+    }
+}
+
+//-------------------------------------
+// Battery Status 127508
+//-------------------------------------
+void Parser::Handle127508(const tN2kMsg &p_rN2kMsg)
 {
     unsigned char SID;
     double ActualVoltage , ActualCurrent , ActualTemp;
@@ -605,12 +654,12 @@ void Parser::Handle127258(const tN2kMsg &p_rN2kMsg)
     {
         std::sprintf (m_buffer ,
                      "Battery Status\n\n \
-    Instance\t%d\n \
-    Voltage\t%.01f\n \
-    Current\t%.01f\n \
-    Temperature\t%.01f\n \
-    SID\t%d",
-                 BatInstance,ActualVoltage, ActualCurrent, ActualTemp, SID);
+                         Instance\t%d\n \
+                         Voltage\t%.01f\n \
+                         Current\t%.01f\n \
+                         Temperature\t%.01f\n \
+                         SID\t%d",
+                         BatInstance,ActualVoltage, ActualCurrent, ActualTemp, SID);
 
     }
 }
@@ -633,14 +682,15 @@ void Parser::Handle128259(const tN2kMsg &p_rN2kMsg)
 
     if (m_DialogActive)
     {
+        if (GroundReferenced < 0) GroundReferenced = 0.f;
         const char * SWRTStr = N2kEnumTypeToStr(static_cast<tN2kSpeedWaterReferenceType>(SWRT));
         std::sprintf (m_buffer ,
                      "Speed Water Referenced\n\n \
-                 Sequence\t%d\n \
-                 Speed Water\t%.01fkts\n \
-                 Speed Ground\t%.01f\n \
-                 Speed Water Ref\t%s",
-                 SID,BoatSpeed,GroundReferenced,SWRTStr);
+ Sequence\t\t%d\n \
+ Speed Water\t\t%.01fkts\n \
+ Speed Ground\t%.01f\n \
+ Speed Ref\t\t%s",
+ SID,BoatSpeed,GroundReferenced,SWRTStr);
 
     }
 }
@@ -667,12 +717,37 @@ void Parser::Handle128267(const tN2kMsg &N2kMsg)
     }
     if (m_DialogActive)
     {
+        if (Offset < 0.f) Offset = 0.f;
         std::sprintf (m_buffer ,
                      "Water Depth\n\n \
-    Sequence\t\t%d\n \
-    Depth Below Transducer\t%.01fm\n \
-    Offset\t\t\t%.01fm\n ",
+Sequence\t%d\n \
+Depth Below\n Transducer\t%.01fm\n \
+Offset\t%.01fm\n ",
                  SID,DepthBelowTransducer,Offset);
+    }
+}
+
+//-------------------------------------
+// Distance Log 128275
+//-------------------------------------
+void Parser::Handle128275(const tN2kMsg &N2kMsg)
+{
+    uint16_t DaysSince1970;
+    double SecondsSinceMidnight;
+    uint32_t Log;
+    uint32_t TripLog;
+
+    if (ParseN2kPGN128275(N2kMsg,DaysSince1970,SecondsSinceMidnight,Log,TripLog) )
+    {
+        if (m_DialogActive)
+        {
+            std::sprintf (m_buffer , "Distance Trip Log\n\n \
+ Date\t\t%d\n \
+ Time\t\t%.1f\n \
+ Log\t\t%.1fnm\n \
+ TripLog\t%.1fnm\n",
+            DaysSince1970 , SecondsSinceMidnight , ((double)(Log/1852.f)) , ((double)(TripLog/1852.f)));
+        }
     }
 }
 
@@ -695,7 +770,7 @@ void Parser::Handle129025(const tN2kMsg &N2kMsg)
     {
         std::sprintf (m_buffer ,
                      "Position Rapid Update\n\n \
-    Latitude\t%04f\n \
+    Latitude\t\t%04f\n \
     Longitude\t%04f\n ",
                          latitude,longitude);
     }
@@ -751,12 +826,12 @@ void Parser::Handle129029(const tN2kMsg & p_rN2kMsg)
     double PDOP = p_rN2kMsg.Get2ByteDouble(1e-2 , offset);
     double separation = p_rN2kMsg.Get4ByteUDouble(0.01, offset);
     int refStations = p_rN2kMsg.GetByte(offset);
-    int refType1 = p_rN2kMsg.Get2ByteUInt( offset);
-    const char * refType1Str = "RefTypeStr";//p_rN2kMsg.GetGNSSStationReference(refType1 & 0x04);
+    uint16_t refType1 = p_rN2kMsg.Get2ByteUInt(offset);
+    const char * refType1Str = ((refType1 & 0xf) == 0x1) ? "GPS":"GLOSNASS";
     int refStationId1 = (refType1 >> 4) & 0x3ff;
 
     int refType2 = p_rN2kMsg.Get2ByteUInt(offset);
-    const char * refType2Str = "RefTypeStr2";//p_rN2kMsg.GetGNSSStationReference(refType2 & 0x04);
+    const char * refType2Str = ((refType1 & 0xf) == 0x1) ? "GPS":"GLOSNASS";
     int refStationId2 = (refType2 >> 4) & 0x3ff;
     int ageOfDGNSS = p_rN2kMsg.Get2ByteUInt(offset);
 
@@ -812,22 +887,25 @@ void Parser::Handle129029(const tN2kMsg & p_rN2kMsg)
     if (m_DialogActive)
     {
         std::sprintf(m_buffer , "GNSS Position Data\n \
-    Sequence\t%d\n \
-    DayCount\t%d\n \
-    Time\t%02d:%02d:%02d\n \
-    Latitude\t%05f\n \
-    Longitude\t%05f\n \
-    Altitude\t%02f\n \
-    Type of System\t%s\n \
-    Method\t\t%s\n \
-    Integrity\t%s\n \
-    SV Count\t%d\n \
-    HDOP\t\t%02f PDOP\t\t%02f\n \
-    Separation\t%04f\n \
-    Ref Stations\t%d\n \
-    Ref Type 1\t%s Ref Type 1\t%d\n \
-    Ref Type 2\t%s Ref Type 2\t%d\n \
-    Age of DGNSS\t%d\n" ,
+Sequence\t\t%d\n \
+DayCount\t\t%d\n \
+Time\t\t%02d:%02d:%02d\n \
+Latitude\t\t%05f\n \
+Longitude\t%05f\n \
+Altitude\t\t%02f\n \
+Type of System\t%s\n \
+Method\t\t%s\n \
+Integrity\t%s\n \
+SV Count\t\t%d\n \
+HDOP\t\t%02f\n \
+PDOP\t\t%02f\n \
+Separation\t%04f\n \
+Ref Stations\t%d\n \
+Ref Type 1\t%s\n \
+Ref Type 1\t%d\n \
+Ref Type 2\t%s \
+Ref Type 2\t%d\n \
+Age of DGNSS\t%d\n" ,
           sequence, dayCount, hours , mins ,
           secs ,latitude , longitude , altitude , typeReference ,
           methodReference , integrityReference , svCount , HDOP , PDOP ,
@@ -868,28 +946,27 @@ void Parser::Handle129038(const tN2kMsg & p_rN2kMsg)
         uint8_t NavStatus = tmp & 0x4;
 
         std::sprintf (m_buffer , "Class A AIS Position Report\n\n \
-    Message Id\t%d\n \
-    Repeat Indicator\t%d\n \
-    Generic ID\t%d\n \
-    Longitude\t%0.4f\n \
-    Latitude\t%0.4f\n \
-    Accuracy\t%d\n \
-    RAIM\t\t%d\n \
-    Timestamp\t%d\n \
-    COG\t\t%0.1f\n \
-    SOG\t\t%0.1f\n \
-    Comm State\t%d\n \
-    AIS Info\t\t%d\n \
-    Heading\t%0.1f\n \
-    Rate Of Turn\t%0.1f\n \
-    Nav Status\t%d\n" ,
+Message Id\t%d\n \
+Repeat Indicator\t%d\n \
+Generic ID\t%d\n \
+Longitude\t%0.4f\n \
+Latitude\t%0.4f\n \
+Accuracy\t%d\n \
+RAIM\t\t%d\n \
+Timestamp\t%d\n \
+COG\t\t%0.1f\n \
+SOG\t\t%0.1f\n \
+Comm State\t%d\n \
+AIS Info\t\t%d\n \
+Heading\t%0.1f\n \
+Rate Of Turn\t%0.1f\n \
+Nav Status\t%d\n" ,
                     MsgId , RepeatInd , GenericId , Longitude , Latitude,
                     Accuracy , RAIM , TimeStamp , RadToDeg(COG) , msToKnots(SOG) , commState ,
                     AISinfo , RadToDeg(Heading) , (ROT) , NavStatus);
 
     }
 }
-
 
 //--------------------------------------------
 // Class B Position Report 129039
@@ -927,21 +1004,214 @@ void Parser::Handle129039(const tN2kMsg & p_rN2kMsg)
     Repeat Indicator\t%d\n \
     Generic ID\t%d\n \
     Longitude\t%0.4f\n \
-    Latitude\t%0.4f\n \
-    Accuracy\t%d\n \
+    Latitude\t\t%0.4f\n \
+    Accuracy\t\t%d\n \
     RAIM\t\t%d\n \
     Timestamp\t%d\n \
     COG\t\t%0.1f\n \
     SOG\t\t%0.1f\n \
     Comm State\t%d\n \
     AIS Info\t\t%d\n \
-    Heading\t%0.1f\n \
+    Heading\t\t%0.1f\n \
     Rate Of Turn\t%0.1f\n \
     Nav Status\t%d\n" ,
                                    MsgId , RepeatInd , GenericId , Longitude , Latitude,
                      Accuracy , RAIM , TimeStamp , RadToDeg(COG) , msToKnots(SOG) , commState ,
                      AISinfo , RadToDeg(Heading) , (ROT) , NavStatus);
 
+    }
+}
+
+//--------------------------------------------
+// Class A Static Voyage Data 129794
+//--------------------------------------------
+void Parser::Handle129794(const tN2kMsg & p_rN2kMsg)
+{
+    if (m_DialogActive)
+    {
+        uint8_t MessageID;
+        tN2kAISRepeat Repeat;
+        uint32_t UserID;
+        uint32_t IMOnumber;
+        char Callsign[128]={0};
+        char Name[128]={0};
+        uint8_t VesselType;
+        double Length;
+        double Beam;
+        double PosRefStbd;
+        double PosRefBow;
+        uint16_t ETAdate;
+        double ETAtime;
+        double Draught;
+        char Destination[128]={0};
+        tN2kAISVersion AISversion;
+        tN2kGNSStype GNSStype;
+        tN2kAISDTE DTE;
+        tN2kAISTransceiverInformation AISinfo;
+        uint8_t SID;
+
+        if (ParseN2kPGN129794(p_rN2kMsg , MessageID, Repeat, UserID, IMOnumber, Callsign, 128,
+               Name, 128,VesselType, Length,Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime,
+               Draught, Destination, 128, AISversion, GNSStype, DTE, AISinfo, SID))
+        {
+            CleanString(Callsign , 128);
+            CleanString(Name , 128);
+            CleanString(Destination , 128);
+
+            const char * AISInfoStr;
+            if (AISinfo >= N2kaischannel_A_VDL_reception && AISinfo <= N2kaisown_information_not_broadcast)
+                AISInfoStr = tN2kAISTransceiverInformationStr[AISinfo];
+            else
+                AISInfoStr = "Unknown";
+
+            const char * GNSSTypeStr = N2kEnumTypeToStr(static_cast<tN2kGNSStype>(GNSStype&0xf));
+
+            std::sprintf (m_buffer , "Class A AIS Static and Voyage Data\n\n \
+ Message Id\t%d\n \
+ Repeat Ind\t%d\n \
+ User ID\t%d\n \
+ IMO Number\t%d\n \
+ Callsign\t%s\n \
+ Name\t\t%s\n \
+ Vessel Type\t%d\n \
+ Length\t%.0fm\n \
+ Beam\t\t%.0fm\n \
+ PosRefStbd\t%.0f\n \
+ PosRefBow\t%.0f\n \
+ ETA Date\t%d\n \
+ ETA Time\t%.2f\n \
+ Draught\t%.0f\n \
+ Destination\t%s\n \
+ AIS Version\t%d\n \
+ GNSSType\t%s\n \
+ DTE\t\t%d\n \
+ AISInfo\t%s\n \
+ SID\t\t%d\n" ,
+                        MessageID , Repeat , UserID , IMOnumber , Callsign,
+                         Name , VesselType, Length , Beam , PosRefStbd , PosRefBow ,
+                         ETAdate , ETAtime , Draught , Destination , AISversion , GNSSTypeStr , DTE , AISInfoStr , SID);
+            }
+
+    }
+}
+
+//--------------------------------------------
+// Class A Static Data Report 129809
+//--------------------------------------------
+void Parser::Handle129809(const tN2kMsg & p_rN2kMsg)
+{
+    if (m_DialogActive)
+    {
+        uint8_t MessageID = 0;
+        tN2kAISRepeat Repeat = N2kaisr_Initial;
+        uint32_t UserID = 0;
+        char Name[128]={0};
+        tN2kAISTransceiverInformation AISinfo = N2kaischannel_A_VDL_reception;
+        uint8_t SID = 0;
+
+
+        if (ParseN2kPGN129809(p_rN2kMsg , MessageID, Repeat, UserID, Name, 128,AISinfo, SID))
+        {
+            CleanString(Name , 128);
+            const char * AISInfoStr;
+            if (AISinfo >= N2kaischannel_A_VDL_reception && AISinfo <= N2kaisown_information_not_broadcast)
+                AISInfoStr = tN2kAISTransceiverInformationStr[AISinfo];
+            else
+                AISInfoStr = "Unknown";
+
+            std::sprintf (m_buffer , "Class AIS Static Data Part A\n\n \
+Message Id\t%d\n \
+Repeat Ind\t%d\n \
+User ID\t%d\n \
+Name\t\t%s\n \
+AISInfo\t%s\n \
+SID\t\t%d\n" ,
+MessageID , Repeat , UserID , Name , AISInfoStr , SID);
+        }
+
+    }
+}
+
+//--------------------------------------------
+// Class Static Data Report Part B 129810
+//--------------------------------------------
+void Parser::Handle129810(const tN2kMsg & p_rN2kMsg)
+{
+    if (m_DialogActive)
+    {
+        uint8_t MessageID;
+        tN2kAISRepeat Repeat;
+        uint32_t UserID;
+        uint8_t VesselType;
+        char Vendor[128];
+        char Callsign[128];
+        double Length;
+        double Beam;
+        double PosRefStbd;
+        double PosRefBow;
+        uint32_t MothershipID;
+        tN2kAISTransceiverInformation AISinfo;
+        uint8_t SID;
+
+
+        if (ParseN2kPGN129810(p_rN2kMsg , MessageID, Repeat, UserID, VesselType , Vendor, 128,Callsign , 128 ,
+                              Length ,Beam , PosRefStbd , PosRefBow , MothershipID , AISinfo, SID))
+        {
+            CleanString(Vendor , 128);
+            CleanString(Callsign , 128);
+            const char * AISInfoStr;
+            if (AISinfo >= N2kaischannel_A_VDL_reception && AISinfo <= N2kaisown_information_not_broadcast)
+                AISInfoStr = tN2kAISTransceiverInformationStr[AISinfo];
+            else
+                AISInfoStr = "Unknown";
+
+
+
+            std::sprintf (m_buffer , "Class AIS Static Data Part B\n\n \
+Message Id\t%d\n \
+Repeat Ind\t%d\n \
+User ID\t%d\n \
+VesselType\t%d\n \
+Vendor\t%s\n \
+Callsign\t%s\n \
+Length\t%.0fm\n \
+Beam\t\t%.0fm\n \
+PosRefStbd\t%.0f\n \
+PosRefBow\t%.0f\n \
+Mothershp ID\t%d\n \
+AISInfo\t%s\n \
+SID\t\t%d\n" ,
+                        MessageID , Repeat , UserID , VesselType, Vendor,
+                        Callsign, Length , Beam , PosRefStbd , PosRefBow ,
+                        MothershipID, AISInfoStr , SID);
+        }
+
+    }
+}
+
+//--------------------------------------------
+// Set and Drift 129291
+//--------------------------------------------
+void Parser::Handle129291(const tN2kMsg & p_rN2kMsg)
+{
+    int offset = 0;
+    uint8_t SID = p_rN2kMsg.GetByte(offset);
+    uint8_t ref = p_rN2kMsg.GetByte(offset)&0x3;
+    double set = p_rN2kMsg.Get2ByteDouble(1e-4 , offset , 0.f);
+    double drift = p_rN2kMsg.Get2ByteDouble(1e-2 , offset , 0.f);
+
+    s_pDisplayInstance->UpdateDisplay (DataItem::SET , RadToDeg(set));
+    s_pDisplayInstance->UpdateDisplay (DataItem::DRIFT , msToKnots(drift));
+
+    if (m_DialogActive)
+    {
+        std::sprintf (m_buffer ,
+                     "Set and Drift, Rapid Update\n\n \
+ Seq\t\t%d\n \
+ Ref\t\t%d\n \
+ Set\t\t%.1f°\n \
+ Drift\t%.1fKts\n ",
+                         SID,ref,RadToDeg(set), msToKnots(drift));
     }
 }
 
@@ -1011,8 +1281,8 @@ void Parser::Handle130306(const tN2kMsg & p_rN2kMsg)
         std::sprintf (m_buffer ,
             "Wind Data\n\n \
     Seq\t\t%d\n \
-    Wind Speed\t\t%.01fkts\n \
-    Wind Direction\t%.01f\n \
+    Wind Speed\t%.01fkts\n \
+    Wind Direction\t%.01f°\n \
     Wind Reference\t%s",
             sequence,msToKnots(windSpeed), RadToDeg(windDirection), windRefStr);
     }
@@ -1035,9 +1305,9 @@ void Parser::Handle130310(const tN2kMsg &p_rN2kMsg)
         std::sprintf (m_buffer ,
                      "Environmental Data\n\n \
     Seq\t\t%d\n \
-    Water Temperature\t%.01f°C\n \
-    Air Temperature\t%.01f\n \
-    Wind Reference\t%0.1f",
+    Water Temp\t%.01f°C\n \
+    Air Temp\t%.01f\n \
+    Wind Ref\t%0.1f",
              SID, KelvinToC (WaterTemperature), KelvinToC (ambientTemperature), pressure);
 
     }
@@ -1057,14 +1327,17 @@ void Parser::Handle130312(const tN2kMsg & p_rN2kMsg)
 
     const char * tempSourceStr = N2kEnumTypeToStr(static_cast<tN2kTempSource>(tempSource));
 
-
-    std::sprintf (m_buffer , "Temperature\n\n \
-    Seq\t\t%d\n \
-    Temp Inst\t%d\n \
-    Temp Source\t%s\n \
-    Actual Temp\t%.1f\n \
-    Set Temp\t%.1f",
-        SID , TempInstance , tempSourceStr , ActualTemperature , SetTemperature);
+    if (m_DialogActive)
+    {
+        if (SetTemperature < 0) SetTemperature = 0.0f;
+        std::sprintf (m_buffer , "Temperature\n\n \
+        Seq\t\t%d\n \
+        Temp Inst\t%d\n \
+        Temp Source\t%s\n \
+        Actual Temp\t%.1f\n \
+        Set Temp\t%.1f",
+            SID , TempInstance , tempSourceStr , KelvinToC(ActualTemperature) , SetTemperature);
+    }
 }
 
 
@@ -1087,9 +1360,9 @@ void Parser::Handle130314(const tN2kMsg & p_rN2kMsg)
     {
         std::sprintf (m_buffer , "Environmental Parameters\n\n \
     Seq\t\t%d\n \
-    Baro Inst\t\t%d\n \
+    Baro Inst\t%d\n \
     Pressure Source\t%s\n \
-    Actual Baro\t\t%.1fmb",
+    Actual Baro\t%.1fmb",
             sequence,baroInst, pressSource, actualbaro);
     }
 }
@@ -1120,15 +1393,28 @@ void Parser::HandleDefault(const tN2kMsg & p_rN2kMsg)
     // loop the data
     char buffer [12];
     std::string data;
+    std::string asciiData;
     int dataLen = p_rN2kMsg.DataLen;
     for (int i = 0 ; i < dataLen ; i++)
     {
-        sprintf(buffer , "%02X%c" , p_rN2kMsg.Data[i] , i%8 == 7 ? '\n' : ' ' );
+        if (isalnum(p_rN2kMsg.Data[i]))
+            asciiData += p_rN2kMsg.Data[i];
+        else
+            asciiData += '.';
+
+        sprintf(buffer , "%02X%c" , p_rN2kMsg.Data[i] , ' ' );
         data+= buffer;
+        if (i%8 == 7)
+        {
+            data += "   ";
+            data += asciiData;
+            data += "\n";
+            asciiData.clear();
+        }
     }
 
     std::sprintf (m_buffer , "Default Handler\n\n \
-    Data\n %s",
+Data\n%s",
         data.data());
 }
 

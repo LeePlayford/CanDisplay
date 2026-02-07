@@ -71,6 +71,18 @@ private:
     bool m_dateTimeSet;
     bool IsDateTimeSet() {return m_dateTimeSet;}
     void SetDateTime() { m_dateTimeSet = true;}
+    void CleanString(char * str , int length)
+    {
+        for (int i = 0 ; 9 < length ; i++)
+        {
+            if (static_cast<uint8_t>(str[i]) == 0xff ||
+                static_cast<uint8_t>(str[i]) == 0x0)
+            {
+                str[i] = 0;break;
+            }
+        }
+    }
+
 
 
     void Handle59904(const tN2kMsg& p_rN2kMsg);
@@ -80,13 +92,19 @@ private:
     void Handle126998(const tN2kMsg& p_rN2kMsg);
     void Handle127250(const tN2kMsg& p_rN2kMsg);
     void Handle127258(const tN2kMsg& p_rN2kMsg);
+    void Handle127508(const tN2kMsg& p_rN2kMsg);
     void Handle128259(const tN2kMsg& p_rN2kMsg);
     void Handle128267(const tN2kMsg& p_rN2kMsg);
+    void Handle128275(const tN2kMsg& p_rN2kMsg);
     void Handle129025(const tN2kMsg& p_rN2kMsg);
     void Handle129026(const tN2kMsg& p_rN2kMsg);
     void Handle129029(const tN2kMsg& p_rN2kMsg);
     void Handle129038(const tN2kMsg& p_rN2kMsg);
     void Handle129039(const tN2kMsg& p_rN2kMsg);
+    void Handle129291(const tN2kMsg& p_rN2kMsg);
+    void Handle129794(const tN2kMsg& p_rN2kMsg);
+    void Handle129809(const tN2kMsg& p_rN2kMsg);
+    void Handle129810(const tN2kMsg& p_rN2kMsg);
     void Handle130306(const tN2kMsg& p_rN2kMsg);
     void Handle130310(const tN2kMsg& p_rN2kMsg);
     void Handle130312(const tN2kMsg& p_rN2kMsg);

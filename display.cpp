@@ -179,6 +179,20 @@ void Display::UpdateDisplay (DataItem dataItem, float value)
         break;
     }
 
+    case DataItem::SET:
+    {
+        sprintf(buf, "%.f°", value);
+        UpdateWidgets("Data_Set" , buf );
+        break;
+    }
+
+    case DataItem::DRIFT:
+    {
+        sprintf(buf, "%.f", value);
+        UpdateWidgets("Data_Drift" , buf );
+        break;
+    }
+
     default:
         break;
     }
